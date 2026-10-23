@@ -1,0 +1,108 @@
+name: Bug report
+description: Report a regression, crash, or behavior bug in Cavaleiro Personal Agent.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing this report. Keep every answer concise, reproducible, and grounded in observed evidence, and report one problem per issue.
+        Please **do not** paste API keys, tokens, phone numbers, chat contents, or private URLs.
+        Security issues must be reported privately — see [SECURITY.md](https://github.com/cavaleiro-ai/cavaleiro-personal-agent/blob/main/SECURITY.md).
+  - type: dropdown
+    id: bug_type
+    attributes:
+      label: Bug type
+      options:
+        - Regression (worked before, now fails)
+        - Crash (process/app exits or hangs)
+        - Behavior bug (incorrect output/state without crash)
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part is affected?
+      options:
+        - Gateway (sessions, routing, cron, state)
+        - Agent runtime, tools, or model providers
+        - Channels (WhatsApp, Telegram, Slack, Discord, ...)
+        - Plugins, skills, or plugin SDK
+        - CLI or onboarding
+        - Control UI or TUI
+        - Install from source, build, or tests
+        - Documentation (docs/cavaleiro, README, guides)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One sentence describing what is broken, based only on what you observed.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The exact commands, messages, or config you used, in order.
+      placeholder: |
+        1. corepack pnpm openclaw onboard --install-daemon
+        2. Sent "/status" in a Telegram group
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: Output of `corepack pnpm openclaw --version` and `git rev-parse --short HEAD`.
+      placeholder: "2026.10.4, cavaleiro-personal-agent abc1234"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system and Node.js
+      placeholder: "Windows 11 / macOS 15 / Ubuntu 24.04, Node 24.21.0"
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model and provider route (if relevant)
+      placeholder: "anthropic/claude-sonnet-4.5 / openrouter -> ... / local llama.cpp"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant Gateway or CLI output (`openclaw logs`, `openclaw doctor`). Redact secrets and message contents. This is rendered as code.
+      render: shell
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Who is affected, how often, and is there a workaround?
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I removed secrets, tokens, and private data from this report.
+          required: true

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability (private)
+    url: https://github.com/cavaleiro-ai/cavaleiro-personal-agent/security/advisories/new
+    about: Please report vulnerabilities privately, never in a public issue.
+  - name: Read the contributing guide
+    url: https://github.com/cavaleiro-ai/cavaleiro-personal-agent/blob/main/CONTRIBUTING.md
+    about: How to set up a source checkout, run focused tests, and propose changes.
+  - name: Guia em português
+    url: https://github.com/cavaleiro-ai/cavaleiro-personal-agent/blob/main/docs/cavaleiro/GUIA-PT-BR.md
+    about: Instalação, configuração e solução de problemas em português.

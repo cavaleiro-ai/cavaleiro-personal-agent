@@ -1,0 +1,103 @@
+name: Cavaleiro CI
+
+# Fork-owned CI for Cavaleiro Personal Agent. It runs on GitHub-hosted runners with a
+# read-only GITHUB_TOKEN and no other secrets. The inherited `ci.yml` (now in
+# `.github/workflows-disabled/`) defaults to upstream's Blacksmith runners and release
+# dispatch integrations; see `.github/workflows-disabled/README.md` to re-enable it.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ format('{0}-{1}', github.workflow, github.event.pull_request.number || github.ref) }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  focused-tests:
+    name: Focused tests (Cavaleiro fixes and touched areas)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
+
+      - name: Setup Node environment
+        uses: ./.github/actions/setup-node-env
+        with:
+          install-bun: "false"
+
+      - name: Format check (files changed by Cavaleiro Personal Agent)
+        run: >-
+          pnpm exec oxfmt --check
+          src/plugins/capability-lease.ts
+          src/plugins/capability-lease.test.ts
+          src/agents/harness/native-session/binding-leases.ts
+          src/agents/harness/native-session/binding-leases.test.ts
+          src/gateway/server-startup-post-attach.ts
+          src/gateway/server-startup-post-attach.test.ts
+          src/gateway/worker-environments/placement-dispatch-orphan-cleanup.ts
+          src/gateway/worker-environments/placement-dispatch-recovery-admission.test.ts
+          src/cli/attach-cli.ts
+          src/cli/attach-cli.action.test.ts
+          src/gateway/server-worker-free.test-support.ts
+          scripts/lib/vitest-worker-build-entries.mts
+          src/auto-reply/reply/commands-context-report.test.ts
+          scripts/lib/format-command-batches.mts
+          test/scripts/format-docs.test.ts
+
+      - name: Lint (files changed by Cavaleiro Personal Agent)
+        run: >-
+          pnpm exec oxlint
+          src/plugins/capability-lease.ts
+          src/plugins/capability-lease.test.ts
+          src/agents/harness/native-session/binding-leases.ts
+          src/agents/harness/native-session/binding-leases.test.ts
+          src/gateway/server-startup-post-attach.ts
+          src/gateway/server-startup-post-attach.test.ts
+          src/gateway/worker-environments/placement-dispatch-orphan-cleanup.ts
+          src/gateway/worker-environments/placement-dispatch-recovery-admission.test.ts
+          src/cli/attach-cli.ts
+          src/cli/attach-cli.action.test.ts
+          src/gateway/server-worker-free.test-support.ts
+          scripts/lib/vitest-worker-build-entries.mts
+          src/auto-reply/reply/commands-context-report.test.ts
+          scripts/lib/format-command-batches.mts
+          test/scripts/format-docs.test.ts
+
+      - name: Focused tests
+        run: >-
+          pnpm test
+          src/plugins/capability-lease.test.ts
+          src/plugins/http-registry.test.ts
+          src/plugins/services.test.ts
+          src/plugins/service-diagnostics.work.test.ts
+          src/agents/harness/native-session/binding-leases.test.ts
+          src/agents/harness/native-session/binding-leases.worker.test.ts
+          src/agents/harness/native-session/binding-lifecycle.test.ts
+          src/acp/control-plane/manager.startup-identity-reconcile.test.ts
+          src/gateway/server-startup-post-attach.test.ts
+          src/gateway/server-close.cleanup-scope.test.ts
+          src/gateway/server-maintenance.telemetry.test.ts
+          src/gateway/worker-environments/placement-dispatch-recovery-admission.test.ts
+          src/gateway/server-worker-placement-startup-cleanup.test.ts
+          src/cli/attach-cli.action.test.ts
+          src/auto-reply/reply/mentions.test.ts
+          src/auto-reply/reply/commands-context-report.test.ts
+          src/auto-reply/reply/commands-acp.test.ts
+          src/auto-reply/reply/session.test.ts
+          src/routing
+          test/scripts/format-docs.test.ts
+          --maxWorkers=2

@@ -1,0 +1,56 @@
+name: Improvement or feature
+description: Suggest an improvement to Cavaleiro Personal Agent.
+title: "[Improvement]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Good proposals describe a **real problem** first, then the smallest change that solves it.
+        New integrations (channels, providers, tools) usually belong in a plugin built on the plugin SDK rather than in core.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is hard, confusing, slow, or risky today? Who hits it, and when?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: The smallest change that would solve it. Name the commands, config keys, or files you expect to touch.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches, including "do nothing" or "a plugin", and why they are worse.
+  - type: textarea
+    id: verification
+    attributes:
+      label: How would we verify it?
+      description: The test, command, or observable behavior that proves the change works.
+    validations:
+      required: true
+  - type: dropdown
+    id: implementation_intent
+    attributes:
+      label: Do you plan to open a pull request?
+      options:
+        - "Yes"
+        - "Maybe, with guidance"
+        - "No"
+    validations:
+      required: true
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Compatibility
+      description: Cavaleiro Personal Agent keeps upstream identifiers so existing plugins, skills, and configs keep working.
+      options:
+        - label: The proposal does not rename the `openclaw` command, packages, config paths, environment variables, or plugin IDs.
+          required: true
+        - label: The proposal adds no default telemetry, hosted service, or credential requirement.
+          required: true
